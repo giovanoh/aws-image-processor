@@ -10,13 +10,12 @@
 - [Build do Projeto](#build-do-projeto)
 - [Configuração AWS Console](#configuração-aws-console)
 - [Testando o Sistema](#testando-o-sistema)
-- [Troubleshooting](#troubleshooting)
-- [Limpeza de Recursos](#limpeza-de-recursos-importante)
+- [Limpeza de Recursos](#limpeza-de-recursos)
 - [Próximos Passos](#próximos-passos)
 
 ---
 
-## 🎯 Visão Geral
+## 🎯 Visão Geral {#visão-geral}
 
 Este projeto demonstra uma arquitetura serverless completa na AWS para processamento automático de imagens. Quando uma imagem é enviada ao S3, ela é automaticamente processada (redimensionamento, otimização) usando Lambda Functions.
 
@@ -30,7 +29,7 @@ Este projeto demonstra uma arquitetura serverless completa na AWS para processam
 
 ---
 
-## 🏗️ Arquitetura
+## 🏗️ Arquitetura {#arquitetura}
 
 ### Fluxo de Dados
 1. **Upload**: Usuário faz upload de `foto.jpg` para bucket `image-processor-in`
@@ -51,7 +50,7 @@ Para um diagrama de sequência detalhado mostrando o tratamento de erros e mecan
 
 ---
 
-## 📦 Pré-requisitos
+## 📦 Pré-requisitos {#pré-requisitos}
 
 ### Ferramentas Necessárias
 - Go (Golang) ([Instalação](https://go.dev/doc/install))
@@ -73,7 +72,7 @@ aws s3 ls
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📁 Estrutura do Projeto {#estrutura-do-projeto}
 
 ```
 aws-image-processor/
@@ -101,7 +100,7 @@ aws-image-processor/
 
 ---
 
-## 🔨 Build do Projeto
+## 🔨 Build do Projeto {#build-do-projeto}
 
 Antes de configurar os recursos AWS, é necessário fazer o build da função Lambda. Este projeto inclui um script de build que automatiza todo o processo.
 
@@ -132,7 +131,7 @@ chmod +x scripts/build.sh
 
 ---
 
-## 🖥️ Configuração AWS Console
+## 🖥️ Configuração AWS Console {#configuração-aws-console}
 
 ### Passo 1: Criar Buckets S3
 
@@ -365,7 +364,7 @@ S3 (image-processor-out-{seu-nome})
 
 ---
 
-## 🧪 Testando o Sistema
+## 🧪 Testando o Sistema {#testando-o-sistema}
 
 ### 1. Teste Manual via AWS CLI
 
@@ -424,7 +423,7 @@ aws cloudwatch get-metric-statistics \
 
 ---
 
-## 🧹 Limpeza de Recursos
+## 🧹 Limpeza de Recursos {#limpeza-de-recursos}
 
 ### Por que Limpar?
 
@@ -449,7 +448,7 @@ Alguns recursos AWS geram custos mesmo quando não estão em uso:
 
 ---
 
-## 🚀 Próximos Passos
+## 🚀 Próximos Passos {#próximos-passos}
 
 ### Infrastructure as Code (IaC) com Terraform
 

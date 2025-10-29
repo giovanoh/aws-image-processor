@@ -10,13 +10,12 @@
 - [Building the Project](#building-the-project)
 - [AWS Console Configuration](#aws-console-configuration)
 - [Testing the System](#testing-the-system)
-- [Troubleshooting](#troubleshooting)
-- [Resource Cleanup](#resource-cleanup-important)
+- [Resource Cleanup](#resource-cleanup)
 - [Next Steps](#next-steps)
 
 ---
 
-## 🎯 Overview
+## 🎯 Overview {#overview}
 
 This project demonstrates a complete serverless architecture on AWS for automatic image processing. When an image is uploaded to S3, it is automatically processed (resizing, optimization) using Lambda Functions.
 
@@ -30,7 +29,7 @@ This project demonstrates a complete serverless architecture on AWS for automati
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture {#architecture}
 
 ### Data Flow
 1. **Upload**: User uploads `photo.jpg` to bucket `image-processor-in`
@@ -51,7 +50,7 @@ For a detailed sequence diagram showing the error handling and retry mechanism, 
 
 ---
 
-## 📦 Prerequisites
+## 📦 Prerequisites {#prerequisites}
 
 ### Required Tools
 - Go (Golang) ([Installation](https://go.dev/doc/install))
@@ -73,7 +72,7 @@ aws s3 ls
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Structure {#project-structure}
 
 ```
 aws-image-processor/
@@ -101,7 +100,7 @@ aws-image-processor/
 
 ---
 
-## 🔨 Building the Project
+## 🔨 Building the Project {#building-the-project}
 
 Before configuring the AWS resources, you need to build the Lambda function. This project includes a build script that automates the entire process.
 
@@ -132,7 +131,7 @@ chmod +x scripts/build.sh
 
 ---
 
-## 🖥️ AWS Console Configuration
+## 🖥️ AWS Console Configuration {#aws-console-configuration}
 
 ### Step 1: Create S3 Buckets
 
@@ -365,7 +364,7 @@ S3 (image-processor-out-{your-name})
 
 ---
 
-## 🧪 Testing the System
+## 🧪 Testing the System {#testing-the-system}
 
 ### 1. Manual Test via AWS CLI
 
@@ -424,7 +423,7 @@ aws cloudwatch get-metric-statistics \
 
 ---
 
-## 🧹 Resource Cleanup
+## 🧹 Resource Cleanup {#resource-cleanup}
 
 ### Why Clean Up?
 
@@ -449,7 +448,7 @@ It's important to follow the order to avoid dependency errors:
 
 ---
 
-## 🚀 Next Steps
+## 🚀 Next Steps {#next-steps}
 
 ### Infrastructure as Code (IaC) with Terraform
 
