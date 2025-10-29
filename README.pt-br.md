@@ -43,11 +43,11 @@ Este projeto demonstra uma arquitetura serverless completa na AWS para processam
 
 ### Diagrama Detalhado
 
-![Diagrama de Fluxo Completo](https://raw.githubusercontent.com/giovanoh/aws-image-processor/main/docs/image-processor-fluxo-completo.svg)
+![Diagrama de Fluxo Completo](https://raw.githubusercontent.com/giovanoh/aws-image-processor/main/docs/architecture-flow.pt-br.svg)
 
 ### Diagrama de Tratamento de Erros
 
-Para um diagrama de sequência detalhado mostrando o tratamento de erros e mecanismo de retry, veja: [Diagrama de Fluxo de Erro](https://raw.githubusercontent.com/giovanoh/aws-image-processor/main/docs/image-processor-fluxo-erro-retry.svg)
+Para um diagrama de sequência detalhado mostrando o tratamento de erros e mecanismo de retry, veja: [Diagrama de Fluxo de Erro](https://raw.githubusercontent.com/giovanoh/aws-image-processor/main/docs/architecture-flow-error.pt-br.svg)
 
 ---
 
@@ -79,22 +79,24 @@ aws s3 ls
 aws-image-processor/
 ├── cmd/
 │   └── lambda/
-│       └── main.go                    # Ponto de entrada da função Lambda
+│       └── main.go                        # Ponto de entrada da função Lambda
 ├── internal/
 │   ├── aws/
-│   │   └── s3_client.go               # Cliente para operações S3
+│   │   └── s3_client.go                   # Cliente para operações S3
 │   └── processor/
-│       └── image_processor.go         # Lógica principal de processamento de imagens
+│       └── image_processor.go             # Lógica principal de processamento de imagens
 ├── scripts/
-│   └── build.sh                       # Script de build
+│   └── build.sh                           # Script de build
 ├── docs/
-│   ├── architecture-flow.puml         # Diagrama da arquitetura em PlantUML
-│   └── architecture-flow-error.puml   # Diagrama de fluxo de erro
-├── go.mod                             # Dependências do projeto Go
-├── go.sum                             # Checksum das dependências
-├── .gitignore                         # Arquivos ignorados pelo Git
-├── README.md                          # Documentação do projeto em inglês
-└── README.pt-br.md                    # Documentação do projeto em português
+│   ├── architecture-flow.puml             # Diagrama da arquitetura em PlantUML (English)
+│   ├── architecture-flow.pt-br.puml       # Diagrama da arquitetura em PlantUML
+│   ├── architecture-flow-error.puml       # Diagrama de fluxo de erro (English)
+│   └── architecture-flow-error.pt-br.puml # Diagrama de fluxo de erro
+├── go.mod                                 # Dependências do projeto Go
+├── go.sum                                 # Checksum das dependências
+├── .gitignore                             # Arquivos ignorados pelo Git
+├── README.md                              # Documentação do projeto em inglês
+└── README.pt-br.md                        # Documentação do projeto em português
 ```
 
 ---

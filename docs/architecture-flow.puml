@@ -1,4 +1,4 @@
-@startuml Image Processor - Fluxo Completo
+@startuml Image Processor - Complete Flow
 !theme cerulean-outline
 skinparam sequenceMessageAlign center
 skinparam responseMessageBelowArrow true
@@ -13,9 +13,9 @@ skinparam queue {
   FontColor Black
 }
 
-title Fluxo Completo: Processamento de Imagens (S3 + SQS + Lambda)
+title Complete Flow: Image Processing (S3 + SQS + Lambda)
 
-actor "Usuário" as User
+actor "User" as User
 participant "S3\n(image-processor-in)" as S3Input #LightBlue
 queue "SQS\n(product-image-queue)" as SQS #Orange
 participant "Lambda\n(ProcessImageFunction)" as Lambda #Green
@@ -23,13 +23,13 @@ participant "S3\n(image-processor-out)" as S3Output #LightBlue
 queue "DLQ\n(product-image-queue-dlq)" as DLQ #Red
 participant "CloudWatch\nLogs" as CW #Purple
 
-== 1. Upload de Imagem ==
+== 1. Image Upload ==
 
-User -> S3Input: Upload imagem\n(foto.jpg)
+User -> S3Input: Upload image\n(photo.jpg)
 activate S3Input
 note right of S3Input
   Bucket: image-processor-in
-  Event Notification configurado
+  Event Notification configured
 end note
 
 S3Input --> User: 200 OK
@@ -37,12 +37,12 @@ deactivate S3Input
 
 == 2. Event Notification ==
 
-S3Input -> SQS: Envia evento S3\n(ObjectCreated:Put)
+S3Input -> SQS: Send S3 event\n(ObjectCreated:Put)
 activate SQS
 note right of SQS
-  Mensagem contém:
+  Message contains:
   - Bucket: image-processor-in
-  - Key: foto.jpg
+  - Key: photo.jpg
   - Size: 2MB
   - Timestamp
 end note
@@ -52,88 +52,87 @@ deactivate SQS
 
 == 3. Lambda Trigger ==
 
-SQS -> Lambda: Poll mensagens\n(batch_size: 10)
+SQS -> Lambda: Poll messages\n(batch_size: 10)
 activate Lambda
 note right of Lambda
-  Lambda é invocada
-  automaticamente pelo SQS
-  com até 10 mensagens
+  Lambda is invoked
+  automatically by SQS
+  with up to 10 messages
 end note
 
-Lambda -> CW: log.Printf("Recebidas N mensagens")
+Lambda -> CW: log.Printf("Received N messages")
 activate CW
 CW --> Lambda: OK
 deactivate CW
 
-== 4. Processamento ==
+== 4. Processing ==
 
-Lambda -> S3Input: GetObject(foto.jpg)
+Lambda -> S3Input: GetObject(photo.jpg)
 activate S3Input
-S3Input --> Lambda: Retorna imagem (bytes)
+S3Input --> Lambda: Return image (bytes)
 deactivate S3Input
 
-Lambda -> CW: log.Printf("Baixando imagem...")
+Lambda -> CW: log.Printf("Downloading image...")
 activate CW
 CW --> Lambda: OK
 deactivate CW
 
 note over Lambda
-  **Processamento Interno:**
-  1. Decodifica imagem
-  2. Cria thumbnail (200x200)
-  3. Cria medium (800x600)
-  4. Comprime JPEG (quality 85)
+  **Internal Processing:**
+  1. Decode image
+  2. Create thumbnail (200x200)
+  3. Create medium (800x600)
+  4. Compress JPEG (quality 85)
 end note
 
 Lambda -> Lambda: resize.Thumbnail(200x200)
 Lambda -> Lambda: resize.Thumbnail(800x600)
 
-== 5. Upload das Imagens Processadas ==
+== 5. Upload Processed Images ==
 
-Lambda -> S3Output: PutObject(thumbnails/foto.jpg)
+Lambda -> S3Output: PutObject(thumbnails/photo.jpg)
 activate S3Output
 S3Output --> Lambda: 200 OK
 deactivate S3Output
 
-Lambda -> CW: log.Printf("Thumbnail criado")
+Lambda -> CW: log.Printf("Thumbnail created")
 activate CW
 CW --> Lambda: OK
 deactivate CW
 
-Lambda -> S3Output: PutObject(medium/foto.jpg)
+Lambda -> S3Output: PutObject(medium/photo.jpg)
 activate S3Output
 S3Output --> Lambda: 200 OK
 deactivate S3Output
 
-Lambda -> CW: log.Printf("Medium criado")
+Lambda -> CW: log.Printf("Medium created")
 activate CW
 CW --> Lambda: OK
 deactivate CW
 
-Lambda -> CW: log.Printf("Sucesso!")
+Lambda -> CW: log.Printf("Success!")
 activate CW
 CW --> Lambda: OK
 deactivate CW
 
-== 6. Finalização (Sucesso) ==
+== 6. Completion (Success) ==
 
-Lambda --> SQS: return nil (sucesso)
+Lambda --> SQS: return nil (success)
 deactivate Lambda
 
 note right of SQS
-  Quando Lambda retorna
-  sucesso (nil), SQS deleta
-  a mensagem automaticamente
+  When Lambda returns
+  success (nil), SQS deletes
+  the message automatically
 end note
 
 SQS -> SQS: DeleteMessage()
 
 note over User, CW #LightGreen
-  **FLUXO CONCLUÍDO COM SUCESSO**
-  Resultado:
-  - s3://image-processor-out/thumbnails/foto.jpg
-  - s3://image-processor-out/medium/foto.jpg
+  **FLOW COMPLETED SUCCESSFULLY**
+  Result:
+  - s3://image-processor-out/thumbnails/photo.jpg
+  - s3://image-processor-out/medium/photo.jpg
 end note
 
 @enduml
-

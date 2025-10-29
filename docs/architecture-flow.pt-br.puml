@@ -1,0 +1,139 @@
+@startuml Image Processor - Fluxo Completo
+!theme cerulean-outline
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam backgroundColor White
+skinparam actor {
+  FontColor Black
+}
+skinparam participant {
+  FontColor Black
+}
+skinparam queue {
+  FontColor Black
+}
+
+title Fluxo Completo: Processamento de Imagens (S3 + SQS + Lambda)
+
+actor "Usuário" as User
+participant "S3\n(image-processor-in)" as S3Input #LightBlue
+queue "SQS\n(product-image-queue)" as SQS #Orange
+participant "Lambda\n(ProcessImageFunction)" as Lambda #Green
+participant "S3\n(image-processor-out)" as S3Output #LightBlue
+queue "DLQ\n(product-image-queue-dlq)" as DLQ #Red
+participant "CloudWatch\nLogs" as CW #Purple
+
+== 1. Upload de Imagem ==
+
+User -> S3Input: Upload imagem\n(foto.jpg)
+activate S3Input
+note right of S3Input
+  Bucket: image-processor-in
+  Event Notification configurado
+end note
+
+S3Input --> User: 200 OK
+deactivate S3Input
+
+== 2. Event Notification ==
+
+S3Input -> SQS: Envia evento S3\n(ObjectCreated:Put)
+activate SQS
+note right of SQS
+  Mensagem contém:
+  - Bucket: image-processor-in
+  - Key: foto.jpg
+  - Size: 2MB
+  - Timestamp
+end note
+
+SQS --> S3Input: ACK
+deactivate SQS
+
+== 3. Lambda Trigger ==
+
+SQS -> Lambda: Poll mensagens\n(batch_size: 10)
+activate Lambda
+note right of Lambda
+  Lambda é invocada
+  automaticamente pelo SQS
+  com até 10 mensagens
+end note
+
+Lambda -> CW: log.Printf("Recebidas N mensagens")
+activate CW
+CW --> Lambda: OK
+deactivate CW
+
+== 4. Processamento ==
+
+Lambda -> S3Input: GetObject(foto.jpg)
+activate S3Input
+S3Input --> Lambda: Retorna imagem (bytes)
+deactivate S3Input
+
+Lambda -> CW: log.Printf("Baixando imagem...")
+activate CW
+CW --> Lambda: OK
+deactivate CW
+
+note over Lambda
+  **Processamento Interno:**
+  1. Decodifica imagem
+  2. Cria thumbnail (200x200)
+  3. Cria medium (800x600)
+  4. Comprime JPEG (quality 85)
+end note
+
+Lambda -> Lambda: resize.Thumbnail(200x200)
+Lambda -> Lambda: resize.Thumbnail(800x600)
+
+== 5. Upload das Imagens Processadas ==
+
+Lambda -> S3Output: PutObject(thumbnails/foto.jpg)
+activate S3Output
+S3Output --> Lambda: 200 OK
+deactivate S3Output
+
+Lambda -> CW: log.Printf("Thumbnail criado")
+activate CW
+CW --> Lambda: OK
+deactivate CW
+
+Lambda -> S3Output: PutObject(medium/foto.jpg)
+activate S3Output
+S3Output --> Lambda: 200 OK
+deactivate S3Output
+
+Lambda -> CW: log.Printf("Medium criado")
+activate CW
+CW --> Lambda: OK
+deactivate CW
+
+Lambda -> CW: log.Printf("Sucesso!")
+activate CW
+CW --> Lambda: OK
+deactivate CW
+
+== 6. Finalização (Sucesso) ==
+
+Lambda --> SQS: return nil (sucesso)
+deactivate Lambda
+
+note right of SQS
+  Quando Lambda retorna
+  sucesso (nil), SQS deleta
+  a mensagem automaticamente
+end note
+
+SQS -> SQS: DeleteMessage()
+
+note over User, CW #LightGreen
+  **FLUXO CONCLUÍDO COM SUCESSO**
+  Resultado:
+  - s3://image-processor-out/thumbnails/foto.jpg
+  - s3://image-processor-out/medium/foto.jpg
+end note
+
+@enduml
+

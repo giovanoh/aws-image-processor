@@ -43,11 +43,11 @@ This project demonstrates a complete serverless architecture on AWS for automati
 
 ### Detailed Flow Diagram
 
-![Complete Flow Diagram](https://raw.githubusercontent.com/giovanoh/aws-image-processor/main/docs/image-processor-fluxo-completo.svg)
+![Complete Flow Diagram](https://raw.githubusercontent.com/giovanoh/aws-image-processor/main/docs/architecture-flow.svg)
 
 ### Error Handling Flow
 
-For a detailed sequence diagram showing the error handling and retry mechanism, see: [Error Flow Diagram](https://raw.githubusercontent.com/giovanoh/aws-image-processor/main/docs/image-processor-fluxo-erro-retry.svg)
+For a detailed sequence diagram showing the error handling and retry mechanism, see: [Error Flow Diagram](https://raw.githubusercontent.com/giovanoh/aws-image-processor/main/docs/architecture-flow-error.svg)
 
 ---
 
@@ -79,22 +79,24 @@ aws s3 ls
 aws-image-processor/
 ├── cmd/
 │   └── lambda/
-│       └── main.go                    # Lambda function entry point
+│       └── main.go                        # Lambda function entry point
 ├── internal/
 │   ├── aws/
-│   │   └── s3_client.go               # Client for S3 operations
+│   │   └── s3_client.go                   # Client for S3 operations
 │   └── processor/
-│       └── image_processor.go         # Main image processing logic
+│       └── image_processor.go             # Main image processing logic
 ├── scripts/
-│   └── build.sh                       # Build script
+│   └── build.sh                           # Build script
 ├── docs/
-│   ├── architecture-flow.puml         # PlantUML architecture diagram
-│   └── architecture-flow-error.puml   # Error flow diagram
-├── go.mod                             # Go project dependencies
-├── go.sum                             # Dependency checksum
-├── .gitignore                         # Files ignored by Git
-├── README.md                          # English project documentation
-└── README.pt-br.md                    # Brazilian Portuguese project documentation
+│   ├── architecture-flow.puml             # PlantUML architecture diagram
+│   ├── architecture-flow.pt-br.puml       # PlantUML architecture diagram (Portuguese)
+│   ├── architecture-flow-error.puml       # Error flow diagram
+│   └── architecture-flow-error.pt-br.puml # Error flow diagram (Portuguese)
+├── go.mod                                 # Go project dependencies
+├── go.sum                                 # Dependency checksum
+├── .gitignore                             # Files ignored by Git
+├── README.md                              # English project documentation
+└── README.pt-br.md                        # Brazilian Portuguese project documentation
 ```
 
 ---
