@@ -1,0 +1,28 @@
+# Binários
+bootstrap
+*.exe
+main
+lambda.zip
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+terraform.tfvars
+
+# IDE
+.idea/
+.vscode/
+
+# Go
+vendor/
+*.mod.sum
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Outros
+notas.txt
+md/

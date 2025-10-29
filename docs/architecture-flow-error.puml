@@ -1,0 +1,166 @@
+@startuml Image Processor - Fluxo com Erro e Retry
+!theme cerulean-outline
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam backgroundColor White
+skinparam actor {
+  FontColor Black
+}
+skinparam participant {
+  FontColor Black
+}
+skinparam queue {
+  FontColor Black
+}
+
+title Fluxo de Erro: Retry e Dead Letter Queue
+ 
+actor "Usuário" as User
+participant "S3\n(image-processor-in)" as S3Input #LightBlue
+queue "SQS\n(product-image-queue)" as SQS #Orange
+participant "Lambda\n(ProcessImageFunction)" as Lambda #Green
+participant "S3\n(image-processor-out)" as S3Output #LightBlue
+queue "DLQ\n(product-image-queue-dlq)" as DLQ #Red
+participant "CloudWatch\nLogs" as CW #Purple
+
+== 1. Primeira Tentativa (Falha) ==
+
+SQS -> Lambda: Poll mensagem (tentativa 1/3)
+activate Lambda
+
+Lambda -> S3Input: GetObject(foto-corrompida.jpg)
+activate S3Input
+S3Input --> Lambda: Retorna imagem
+deactivate S3Input
+
+Lambda -> Lambda: Tentar decodificar imagem
+note right of Lambda #Pink
+  Erro: imagem corrompida
+  image.Decode() falha
+end note
+
+Lambda -> CW: log.Printf("Erro ao decodificar")
+activate CW
+CW --> Lambda: OK
+deactivate CW
+
+Lambda --> SQS: return error
+deactivate Lambda
+
+note right of SQS
+  SQS recebe erro e:
+  1. NÃO deleta mensagem
+  2. Mensagem fica invisível por 5min
+  3. Incrementa receive count
+end note
+
+SQS -> SQS: ChangeMessageVisibility(300s)
+
+== 2. Segunda Tentativa (Falha) ==
+
+note over SQS
+  Após 5 minutos,
+  mensagem volta a ficar visível
+end note
+
+SQS -> Lambda: Poll mensagem (tentativa 2/3)
+activate Lambda
+
+Lambda -> S3Input: GetObject(foto-corrupta.jpg)
+activate S3Input
+S3Input --> Lambda: Retorna imagem
+deactivate S3Input
+
+Lambda -> Lambda: Tentar decodificar imagem
+note right of Lambda #Pink
+  Mesmo erro
+end note
+
+Lambda -> CW: log.Printf("Erro ao decodificar")
+activate CW
+CW --> Lambda: OK
+deactivate CW
+
+Lambda --> SQS: return error
+deactivate Lambda
+
+SQS -> SQS: Receive count = 2
+
+== 3. Terceira Tentativa (Falha) ==
+
+note over SQS #Yellow
+  Última tentativa antes da DLQ
+end note
+
+SQS -> Lambda: Poll mensagem (tentativa 3/3)
+activate Lambda
+
+Lambda -> S3Input: GetObject(foto-corrupta.jpg)
+activate S3Input
+S3Input --> Lambda: Retorna imagem
+deactivate S3Input
+
+Lambda -> Lambda: Tentar decodificar imagem
+note right of Lambda #Pink
+  Falha novamente
+end note
+
+Lambda -> CW: log.Printf("Erro ao decodificar")
+activate CW
+CW --> Lambda: OK
+deactivate CW
+
+Lambda --> SQS: return error
+deactivate Lambda
+
+SQS -> SQS: Receive count = 3 (máximo)
+
+== 4. Envio para Dead Letter Queue ==
+
+note right of SQS #Red
+  maxReceiveCount atingido!
+  Mensagem vai para DLQ
+end note
+
+SQS -> DLQ: SendMessage(mensagem original)
+activate DLQ
+
+note right of DLQ
+  Mensagem fica na DLQ
+  para análise manual
+  
+  Desenvolvedores podem:
+  - Investigar o problema
+  - Corrigir imagem
+  - Reprocessar manualmente
+end note
+
+SQS -> SQS: DeleteMessage()
+deactivate DLQ
+
+== 5. Alerta (Opcional) ==
+
+DLQ -> CW: Métrica: NumberOfMessagesSent
+activate CW
+
+note over CW #Orange
+  CloudWatch Alarm pode
+  notificar via SNS/Email
+  quando DLQ recebe mensagens
+end note
+
+CW --> DLQ: OK
+deactivate CW
+
+note over User, CW #Pink
+  **PROCESSAMENTO FALHOU**
+  
+  Ações necessárias:
+  1. Verificar logs no CloudWatch
+  2. Investigar mensagens na DLQ
+  3. Corrigir problema
+  4. Reprocessar manualmente se necessário
+end note
+
+@enduml
+
