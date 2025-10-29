@@ -33,7 +33,7 @@ This project demonstrates a complete serverless architecture on AWS for automati
 ## 🏗️ Architecture
 
 ### Data Flow
-1. **Upload**: User uploads `foto.jpg` to bucket `image-processor-in`
+1. **Upload**: User uploads `photo.jpg` to bucket `image-processor-in`
 2. **Event**: S3 sends notification to SQS queue `product-image-queue`
 3. **Trigger**: Lambda is triggered automatically by SQS
 4. **Processing**: Lambda downloads image, creates thumbnail and optimized versions
