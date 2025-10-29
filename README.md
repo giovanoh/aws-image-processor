@@ -3,19 +3,19 @@
 > :globe_with_meridians: Read this in other languages: [Português (Brasil)](README.pt-br.md)
 
 ## 📋 Table of Contents
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Prerequisites](#prerequisites)
-- [Project Structure](#project-structure)
-- [Building the Project](#building-the-project)
-- [AWS Console Configuration](#aws-console-configuration)
-- [Testing the System](#testing-the-system)
-- [Resource Cleanup](#resource-cleanup)
-- [Next Steps](#next-steps)
+- [Overview](#-overview)
+- [Architecture](#️-architecture)
+- [Prerequisites](#-prerequisites)
+- [Project Structure](#-project-structure)
+- [Building the Project](#-building-the-project)
+- [AWS Console Configuration](#️-aws-console-configuration)
+- [Testing the System](#-testing-the-system)
+- [Resource Cleanup](#-resource-cleanup)
+- [Next Steps](#-next-steps)
 
 ---
 
-## 🎯 Overview {#overview}
+## 🎯 Overview
 
 This project demonstrates a complete serverless architecture on AWS for automatic image processing. When an image is uploaded to S3, it is automatically processed (resizing, optimization) using Lambda Functions.
 
@@ -29,7 +29,7 @@ This project demonstrates a complete serverless architecture on AWS for automati
 
 ---
 
-## 🏗️ Architecture {#architecture}
+## 🏗️ Architecture
 
 ### Data Flow
 1. **Upload**: User uploads `photo.jpg` to bucket `image-processor-in`
@@ -50,7 +50,7 @@ For a detailed sequence diagram showing the error handling and retry mechanism, 
 
 ---
 
-## 📦 Prerequisites {#prerequisites}
+## 📦 Prerequisites
 
 ### Required Tools
 - Go (Golang) ([Installation](https://go.dev/doc/install))
@@ -72,7 +72,7 @@ aws s3 ls
 
 ---
 
-## 📁 Project Structure {#project-structure}
+## 📁 Project Structure
 
 ```
 aws-image-processor/
@@ -100,7 +100,7 @@ aws-image-processor/
 
 ---
 
-## 🔨 Building the Project {#building-the-project}
+## 🔨 Building the Project
 
 Before configuring the AWS resources, you need to build the Lambda function. This project includes a build script that automates the entire process.
 
@@ -131,7 +131,7 @@ chmod +x scripts/build.sh
 
 ---
 
-## 🖥️ AWS Console Configuration {#aws-console-configuration}
+## 🖥️ AWS Console Configuration
 
 ### Step 1: Create S3 Buckets
 
@@ -364,7 +364,7 @@ S3 (image-processor-out-{your-name})
 
 ---
 
-## 🧪 Testing the System {#testing-the-system}
+## 🧪 Testing the System
 
 ### 1. Manual Test via AWS CLI
 
@@ -423,7 +423,7 @@ aws cloudwatch get-metric-statistics \
 
 ---
 
-## 🧹 Resource Cleanup {#resource-cleanup}
+## 🧹 Resource Cleanup
 
 ### Why Clean Up?
 
@@ -448,7 +448,7 @@ It's important to follow the order to avoid dependency errors:
 
 ---
 
-## 🚀 Next Steps {#next-steps}
+## 🚀 Next Steps
 
 ### Infrastructure as Code (IaC) with Terraform
 
