@@ -223,8 +223,6 @@ chmod +x scripts/build.sh
    - Architecture: **x86_64**
    - Clicar em "Create function"
 
-   > **⚠️ Importante:** Use "provided.al2023" com binário customizado.
-
 3. **Upload do Código**
    - Na seção "Code source"
    - Clicar em "Upload from" → ".zip file"
