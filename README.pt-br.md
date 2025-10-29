@@ -455,6 +455,10 @@ Alguns recursos AWS geram custos mesmo quando não estão em uso:
 
 Atualmente, este projeto requer configuração manual através do Console AWS. Como próximo passo, pode ser implementado Infrastructure as Code (IaC) usando Terraform para provisionar todos os recursos AWS diretamente.
 
+### Configuração de CDN com CloudFront
+
+Para melhorar o desempenho e reduzir a latência ao servir as imagens processadas, uma distribuição CloudFront pode ser configurada para entregar conteúdo a partir do bucket S3 de saída. Isso permite cache global e entrega mais rápida de imagens aos usuários finais.
+
 ---
 
 **⭐ Se este projeto foi útil, considere dar uma estrela no GitHub!**

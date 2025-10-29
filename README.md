@@ -455,6 +455,10 @@ It's important to follow the order to avoid dependency errors:
 
 Currently, this project requires manual configuration through the AWS Console. As a next step, Infrastructure as Code (IaC) can be implemented using Terraform to provision all AWS resources directly.
 
+### CDN Configuration with CloudFront
+
+To improve performance and reduce latency when serving processed images, a CloudFront distribution can be configured to deliver content from the output S3 bucket. This enables global caching and faster image delivery to end users.
+
 ---
 
 **⭐ If this project was useful, consider giving it a star on GitHub!**
