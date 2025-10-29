@@ -43,11 +43,11 @@ Este projeto demonstra uma arquitetura serverless completa na AWS para processam
 
 ### Diagrama Detalhado
 
-![Diagrama de Fluxo Completo](docs/Image%20Processor%20-%20Fluxo%20Completo.svg)
+![Diagrama de Fluxo Completo](docs/image-processor-fluxo-completo.svg)
 
 ### Diagrama de Tratamento de Erros
 
-Para um diagrama de sequência detalhado mostrando o tratamento de erros e mecanismo de retry, veja: [Diagrama de Fluxo de Erro](docs/Image%20Processor%20-%20Fluxo%20com%20Erro%20e%20Retry.svg)
+Para um diagrama de sequência detalhado mostrando o tratamento de erros e mecanismo de retry, veja: [Diagrama de Fluxo de Erro](docs/image-processor-fluxo-erro-retry.svg)
 
 ---
 

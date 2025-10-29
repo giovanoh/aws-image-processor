@@ -43,11 +43,11 @@ This project demonstrates a complete serverless architecture on AWS for automati
 
 ### Detailed Flow Diagram
 
-![Complete Flow Diagram](docs/Image%20Processor%20-%20Fluxo%20Completo.svg)
+![Complete Flow Diagram](docs/image-processor-fluxo-completo.svg)
 
 ### Error Handling Flow
 
-For a detailed sequence diagram showing the error handling and retry mechanism, see: [Error Flow Diagram](docs/Image%20Processor%20-%20Fluxo%20com%20Erro%20e%20Retry.svg)
+For a detailed sequence diagram showing the error handling and retry mechanism, see: [Error Flow Diagram](docs/image-processor-fluxo-erro-retry.svg)
 
 ---
 
